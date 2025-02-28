@@ -1,6 +1,6 @@
-    # MongoDB Konfigurationsanpassungen
+# MongoDB Konfigurationsanpassungen
 
-## 3. Connection String und `authSource=admin`
+## 1. Connection String und `authSource=admin`
 
 ### Was bewirkt `authSource=admin`?
 Der Parameter `authSource=admin` im MongoDB Connection String gibt an, dass die Authentifizierung gegen die `admin`-Datenbank durchgeführt wird. In MongoDB werden Benutzerkonten in der `admin`-Datenbank gespeichert, selbst wenn sie Zugriff auf andere Datenbanken haben. Ohne diesen Parameter versucht der Client, sich an der Standarddatenbank zu authentifizieren, was zu Authentifizierungsfehlern führen kann, wenn der Benutzer nicht dort registriert ist.
@@ -15,7 +15,7 @@ Durch die Angabe von `authSource=admin` wird sichergestellt, dass die Authentifi
 
 ---
 
-## 4. Erklärung der `sed`-Befehle in der Cloud-Init Datei
+## 2. Erklärung der `sed`-Befehle in der Cloud-Init Datei
 
 ### Erster `sed`-Befehl:
 ```bash
@@ -44,7 +44,7 @@ sudo sed -i 's/#security:/security:\n  authorization: enabled/g' /etc/mongod.con
 
 ---
 
-## 5. Screenshot der MongoDB-Konfigurationsdatei
+## 3. Screenshot der MongoDB-Konfigurationsdatei
 
 ### Vorgehensweise:
 1. Per SSH in die Instanz einloggen.
@@ -61,25 +61,6 @@ sudo sed -i 's/#security:/security:\n  authorization: enabled/g' /etc/mongod.con
    - Aktivierte Authentifizierung (`authorization: enabled` unter `security`)
 ![Grep](grep.png)
 ![MongoDB Security Einstellungen](security.png)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -151,3 +132,25 @@ Diese Übung zeigt den Unterschied zwischen der Darstellung von Daten in JSON un
 ## Screenshot zur Authentifizierung
 
 ![New Data](newData.png)
+
+
+
+
+## Shell Befehle 
+### show dbs;
+Listet alle vorhandenen Datenbanken auf dem Server auf.
+
+### show databases;
+Liefert dieselbe Ausgabe wie „show dbs;“ – beide Befehle zeigen alle existierenden Datenbanken an.
+
+### use Ihre-Datenbank;
+Wechselt in die angegebene Datenbank (z. B. „use Muster“). Wenn die Datenbank noch keine Daten enthält, wird sie erst beim Einfügen von Dokumenten tatsächlich erstellt.
+
+### show collections;
+Zeigt alle Collections (also die Container für Dokumente) in der aktuell gewählten Datenbank an.
+
+### show tables;
+Ist in MongoDB ein Alias für „show collections;“ und liefert damit dieselbe Information.
+![Show](showDBSUNBUNTU.png)
+
+![Show](showCompass.png)
