@@ -1,0 +1,10 @@
+[{
+  "_id": {
+    "$oid": "67c1a3e9df4043b8fe9dfe33"
+  },
+  "Adresse": "Sigma Strasse 69, Neuhausen 8812",
+  "Grösse": 210,
+  "Geburtsdatum": {
+    "$date": "2007-05-09T00:00:00.000Z"
+  }
+}]
