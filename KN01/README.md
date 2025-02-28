@@ -11,6 +11,7 @@ mongodb://<IhrBenutzer>:<IhrPasswort>@<IhreIp>:27017/?authSource=admin&readPrefe
 ```
 
 Durch die Angabe von `authSource=admin` wird sichergestellt, dass die Authentifizierung korrekt durchgeführt wird und der Benutzer Zugriff auf die gewünschten Datenbanken erhält.
+
 ![Atlas](image.png)
 
 ---
@@ -59,6 +60,7 @@ sudo sed -i 's/#security:/security:\n  authorization: enabled/g' /etc/mongod.con
 
    - Bind-Adresse (`0.0.0.0` statt `127.0.0.1`)
    - Aktivierte Authentifizierung (`authorization: enabled` unter `security`)
+   
 ![Grep](grep.png)
 ![MongoDB Security Einstellungen](security.png)
 
