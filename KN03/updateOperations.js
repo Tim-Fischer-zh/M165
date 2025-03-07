@@ -1,48 +1,44 @@
 // Wechsel in die Datenbank "PanzerDB"
-use PanzerDB
+use Panzer
 
-// =======================================================
-// 1. updateOne() auf Collection "Panzer"
-//    -> Filterung mittels _id: Wir holen einen Panzer-Datensatz und ändern dessen Zustand
-// =======================================================
-var panzerDoc = db.Panzer.findOne();
-if (panzerDoc) {
-    print("updateOne() in Panzer: Ändere Zustand für Dokument _id: " + panzerDoc._id);
+// Update 1: updateOne() in der Collection "Panzer"
+// Filter mit _id: Ändere den Zustand eines bestimmten Panzer-Dokuments (z. B. "Leopard 2")
+var doc = db.Panzer.findOne({ Modell: "Leopard 2" });
+if(doc) {
+    print("updateOne: Setze Zustand auf 'In Reparatur' für 'Leopard 2'");
     db.Panzer.updateOne(
-      { _id: panzerDoc._id },
-      { $set: { Zustand: "In Reparatur" } }
+        { _id: doc._id },
+        { $set: { Zustand: "In Reparatur" } }
     );
 } else {
-    print("Keine Dokumente in der Collection 'Panzer' gefunden.");
+    print("'Leopard 2' nicht gefunden.");
 }
 
-// =======================================================
-// 2. updateMany() auf Collection "Besatzung"
-//    -> Ohne Verwendung der _id: Wir ändern alle Dokumente, bei denen der Rang entweder "Leutnant" oder "Feldwebel" ist
-// =======================================================
-print("updateMany() in Besatzung: Setze Status 'Aktiv' für alle Leutnant oder Feldwebel");
-db.Besatzung.updateMany(
-  { $or: [ { Rang: "Leutnant" }, { Rang: "Feldwebel" } ] },
-  { $set: { Status: "Aktiv" } }
+// Update 2: updateMany() ohne _id: Ändere den Zustand aller Panzer, die entweder "In Wartung" oder "TestZustand" haben, auf "Überholt"
+print("updateMany: Setze Zustand auf 'Überholt' für Panzer mit Zustand 'In Wartung' oder 'TestZustand'");
+db.Panzer.updateMany(
+    { $or: [ { Zustand: "In Wartung" }, { Zustand: "TestZustand" } ] },
+    { $set: { Zustand: "Überholt" } }
 );
 
-// =======================================================
-// 3. replaceOne() auf Collection "Wartung"
-//    -> Ersetze ein gesamtes Dokument: Wir holen einen Wartungs-Datensatz und ersetzen ihn vollständig
-// =======================================================
-var wartungDoc = db.Wartung.findOne();
-if (wartungDoc) {
-    print("replaceOne() in Wartung: Ersetze Dokument mit _id: " + wartungDoc._id);
-    db.Wartung.replaceOne(
-      { _id: wartungDoc._id },
-      {
-          _id: wartungDoc._id, // Behalte die bestehende _id
-          Datum: new Date("2023-05-01"),  // neues Datum
-          Beschreibung: "Komplette Überholung", 
-          Kosten: 2500.00,
-          Notizen: "Dokument wurde ersetzt"
-      }
+// Update 3: replaceOne() in der Collection "Panzer"
+// Ersetze ein gesamtes Dokument (z. B. für "M1 Abrams") und ändere dabei den Zustand vollständig
+var docToReplace = db.Panzer.findOne({ Modell: "M1 Abrams" });
+if(docToReplace) {
+    print("replaceOne: Ersetze das Dokument für 'M1 Abrams'");
+    db.Panzer.replaceOne(
+        { _id: docToReplace._id },
+        {
+            _id: docToReplace._id, // beibehalten
+            Modell: "M1 Abrams",
+            Baujahr: docToReplace.Baujahr,
+            Typ: docToReplace.Typ,
+            Zustand: "Neuzustand", // neuer Zustand
+            Besatzung: docToReplace.Besatzung,
+            Wartung: docToReplace.Wartung,
+            Waffensystem: docToReplace.Waffensystem
+        }
     );
 } else {
-    print("Keine Dokumente in der Collection 'Wartung' gefunden.");
+    print("'M1 Abrams' nicht gefunden.");
 }

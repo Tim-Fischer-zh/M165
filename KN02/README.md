@@ -42,35 +42,41 @@ Erfasst die an den Panzern montierten Waffensysteme:
    - Ein Panzer kann mehrere Waffensysteme haben.
 
 ```mermaid
-erDiagram
-    PANZER ||--o{ BESATZUNG : hat
-    PANZER ||--o{ WARTUNG : unterliegt
-    PANZER ||--o{ WAFFENSYSTEM : ausgestattet_mit
+classDiagram
+    class Panzer {
+      +ObjectId _id
+      +string Modell
+      +int Baujahr
+      +string Typ
+      +string Zustand
+      +Besatzung[] Besatzung
+      +Wartung[] Wartung
+      +Waffensystem[] Waffensystem
+    }
+    class Besatzung {
+      +ObjectId BesatzungsID
+      +string Vorname
+      +string Nachname
+      +string Rang
+      +string Funktion
+    }
+    class Wartung {
+      +ObjectId WartungsID
+      +date Datum
+      +string Beschreibung
+      +float Kosten
+    }
+    class Waffensystem {
+      +ObjectId WaffensystemID
+      +string Typ
+      +float Kaliber
+      +string Hersteller
+    }
+    
+    Panzer "1" o-- "0..*" Besatzung : enthält
+    Panzer "1" o-- "0..*" Wartung : enthält
+    Panzer "1" o-- "0..*" Waffensystem : enthält
 
-    PANZER {
-        string Modell
-        int Baujahr
-        string Typ
-        string Zustand
-    }
-    
-    BESATZUNG {
-        string Name
-        string Rang
-        string Funktion
-    }
-    
-    WARTUNG {
-        date Datum
-        string Beschreibung
-        float Kosten
-    }
-    
-    WAFFENSYSTEM {
-        string Typ
-        int Kaliber
-        string Hersteller
-    }
 ```
 
 Dieses Modell visualisiert die Beziehungen zwischen Panzern, Besatzung, Wartungsarbeiten und Waffensystemen, um eine strukturierte Datenhaltung zu ermöglichen.
