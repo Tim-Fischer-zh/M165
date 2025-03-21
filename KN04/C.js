@@ -2,65 +2,6 @@
 // KN-M-03 Aggregations-Abfragen
 // --------------------------
 
-// A) Aggregationen
-
-// A1: Simulation der UND-Verknüpfung, indem zwei $match-Stages hintereinander geschaltet werden.
-// Beispiel: Finde alle Panzer, die den Zustand "Betriebsbereit" UND das Modell "Leopard 2" haben.
-print("A1: Chained $match (Zustand 'Betriebsbereit' und Modell 'Leopard 2')");
-db.Panzer.aggregate([
-  { $match: { Zustand: "Betriebsbereit" } },
-  { $match: { Modell: "Leopard 2" } }
-]).forEach(printjson);
-
-// A2: Aggregations-Pipeline mit $match, $project und $sort.
-// Beispiel: Finde alle Panzer, die "Betriebsbereit" sind, zeige Modell, Baujahr und Zustand, und sortiere aufsteigend nach Baujahr.
-print("A2: Pipeline mit $match, $project, $sort");
-db.Panzer.aggregate([
-  { $match: { Zustand: "Betriebsbereit" } },
-  { $project: { _id: 1, Modell: 1, Baujahr: 1, Zustand: 1 } },
-  { $sort: { Baujahr: 1 } }
-]).forEach(printjson);
-
-// A3: Aggregation mit $group und $sum.
-// Beispiel: Gruppiere die Panzer nach Zustand und zähle die Anzahl der Panzer in jedem Zustand.
-print("A3: Gruppierung mit $group und $sum");
-db.Panzer.aggregate([
-  { $group: { _id: "$Zustand", count: { $sum: 1 } } }
-]).forEach(printjson);
-
-
-// B) Join-Aggregation ($lookup)
-// Hinweis: Für diese Abfragen wird angenommen, dass es eine separate Collection "Besatzung" gibt, 
-// in der jedes Dokument ein Feld "PanzerID" enthält, das auf das _id-Feld in "Panzer" verweist.
-
-print("B1: $lookup - Verbinde 'Panzer' mit 'Besatzung'");
-db.Panzer.aggregate([
-  {
-    $lookup: {
-      from: "Besatzung",
-      localField: "_id",
-      foreignField: "PanzerID",
-      as: "BesatzungsDetails"
-    }
-  }
-]).forEach(printjson);
-
-print("B2: $lookup mit zusätzlichem Filter und Projektion");
-// Beispiel: Führe $lookup aus und filtere anschließend auf Besatzungs-Datensätze, deren Rang 'Leutnant' ist,
-// und projiziere nur das Modell und die BesatzungsDetails.
-db.Panzer.aggregate([
-  {
-    $lookup: {
-      from: "Besatzung",
-      localField: "_id",
-      foreignField: "PanzerID",
-      as: "BesatzungsDetails"
-    }
-  },
-  { $match: { "BesatzungsDetails.Rang": "Leutnant" } },
-  { $project: { Modell: 1, BesatzungsDetails: 1, _id: 1 } }
-]).forEach(printjson);
-
 
 // C) Abfragen auf Unterdokumente / Arrays
 
